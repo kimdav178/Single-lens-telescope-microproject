@@ -1,15 +1,21 @@
-from PIL import Image
+from PIL import Image, ImageDraw
 from math import *
 import time
 import numpy as np
 
 # Working with images
 st = time.time()
+#image = Image.open("2.jpg").convert('RGB')
+#height = image.size[1]
+#width = image.size[0]
+#image1 = Image.new('RGB', (width, height))
 img = np.asarray(Image.open("2.jpg").convert('RGB'))
 height = img.shape[0]
 width = img.shape[1]
 img1 = np.array(Image.new('RGB', (width, height)))
 img2 = np.zeros((height, width, 3), dtype=np.float)
+#img1.setflags(write=1)
+#img0 = np.zeros((height, width))
 
 
 # Setup parameters
@@ -25,7 +31,9 @@ img_width = 0.0046728    # Width of the image, m. 176 пикс
 img_height = img_width * 144 / 176
 obj_img_width = 0.00046728   # Width of the book in the picture, m
 pixel = 0.00002655   # Width of a single pixel, m. 0,9 um *(4248 pix/144 pix)
-k = (L + d)/FDO     # Coefficient between the object and its image on the matrix
+k = (L + d)/FDO
+#k2 = k*width*obj_img_width/(img_width*obj_width)
+#img_square = 0.00128  # Square of the image on the screen
 
 
 def ray(x1, y1, x2, y2):
@@ -58,7 +66,12 @@ def ray(x1, y1, x2, y2):
 
 for i in range(width):
     for j in range(height):
+        #RR, GG, BB = image.getpixel((i, j))
         RR, GG, BB = img[j, i]
+        #RR, GG, BB = img[i, j]
+        #RR = 0.0023 * RR
+        #GG = 0.0023 * GG
+        #BB = 0.0023 * BB
         i0 = (i - width/2) * pixel
         j0 = (j - height/2) * pixel
         RadO0 = floor(RadO/pixel)
@@ -66,8 +79,15 @@ for i in range(width):
             for j1 in range(-round(sqrt(RadO0*RadO0-(i1*i1))), round(sqrt(RadO0*RadO0-(i1*i1)))):
                 x0, y0 = ray(i0, j0, i1*pixel, j1*pixel)
                 if x0 < 500:
+                    #RRR, GGG, BBB = image1.getpixel((x0, y0))
+                    #RRR, GGG, BBB = img2[y0, x0]
+                    #r1 = RR + RRR
+                    #g1 = GG + GGG
+                    #b1 = BB + BBB
+                    #image1.putpixel((x0, y0), (r1, g1, b1))
                     img2[y0, x0] += [RR, GG, BB]
 
+#k1 = 255/(img2.max() - img2.min())
 k1 = 255/img2.max()
 img2 = img2 * k1
 for i in range(height):
@@ -75,6 +95,18 @@ for i in range(height):
         img1[i, j, 0] = floor(img2[i, j, 0])
         img1[i, j, 1] = floor(img2[i, j, 1])
         img1[i, j, 2] = floor(img2[i, j, 2])
+        #img1[i, j] = img2[i, j]
+
+"""
+for i in range(width):
+    for j in range(height):
+        r, g, b = image1.getpixel((i, j))
+        r = round(r * 0.0023)
+        g = round(g * 0.0023)
+        b = round(b * 0.0023)
+        image1.putpixel((i, j), (r, g, b))
+"""
 
 Image.fromarray(img1).save("0.jpg", "JPEG")
+#image1.save("0.jpg", "JPEG")
 print(time.time() - st)
