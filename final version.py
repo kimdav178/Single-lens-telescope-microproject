@@ -17,7 +17,7 @@ img2 = np.zeros((height, width, 3), dtype=np.float)
 d = 3  # Distance from the lens to the object
 RadL = 0.03  # Lens' radius
 FDL = 0.30375  # Lens' focal distance
-l = 0.11  # Distance from the lens to the objective and slit
+l = 0.12  # Distance from the lens to the objective and slit
 FDO = 0.00393  # Objective's focal distance
 RadO = 0.00115588  # Objective's radius
 RadS = 0.0004  # Slit's radius

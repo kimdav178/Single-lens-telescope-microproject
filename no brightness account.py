@@ -2,7 +2,6 @@ from PIL import Image
 from math import *
 import time
 import numpy as np
-#import random
 
 # Working with images
 st = time.time()
@@ -21,22 +20,11 @@ d = 0.0000000000001    # Distance from the lens to the objective and slit
 FDO = 0.00393  # Objective's focal distance
 RadO = 0.00115588  # Objective's radius
 RadS = 0.0004  # Slit's radius
-#obj_width = 0.15    # Width of the book in real world, m
-#pixel = 0.0038232/height    # Width of a single pixel, m. 0,9 um *(4248 pix/144 pix)
 pixel = 0.0000009
 img_width = pixel * width    # Width of the image, m.
 img_height = pixel * height
 k = (L + d)/FDO     # Coefficient between the object and its image on the matrix
-
-
-"""
-def randround(x):
-    t = random.randrange(1, 2)
-    if t % 2 == 0:
-        return floor(x)
-    else:
-        return ceil(x)
-"""
+x = 10 * pixel
 
 
 def ray(x1, y1, x2, y2):
@@ -64,8 +52,7 @@ def ray(x1, y1, x2, y2):
                 else:
                     return x7, y7
 
-x = 10 * pixel
-#RadO0 = floor(RadO/pixel)
+
 for i in range(width):
     i0 = (i - width/2) * pixel
     for j in range(height):
@@ -80,14 +67,6 @@ for i in range(width):
                     img2[y0, x0] += [RR, GG, BB]
                 j1 += x
             i1 += x
-"""
-        for i1 in range(-RadO0, RadO0):
-            i2 = i1 * pixel
-            for j1 in range(-round(sqrt(RadO0*RadO0-(i1*i1))), round(sqrt(RadO0*RadO0-(i1*i1)))):
-                x0, y0 = ray(i0, j0, i2, j1*pixel)
-                if x0 < 500:
-                    img2[y0, x0] += [RR, GG, BB]
-"""
 
 
 k1 = 255/img2.max()
